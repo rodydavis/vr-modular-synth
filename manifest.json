@@ -1,6 +1,6 @@
 {
   "index.html": {
-    "file": "vite-lit-element-starter.es.js",
+    "file": "vr-modular-synth.es.js",
     "src": "index.html",
     "isEntry": true
   }
