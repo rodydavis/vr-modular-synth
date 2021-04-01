@@ -13,8 +13,10 @@ export class MyElement extends LitElement {
   `;
 
   async firstUpdated() {
+    const synth = new Synth();
     const scene = new Scene(this.canvas);
     scene.setup();
+
     const getOctave = (octave: number) => {
       const notes: string[] = [
         `C${octave}`,
@@ -27,6 +29,7 @@ export class MyElement extends LitElement {
       ];
       return notes;
     };
+
     for (let o = 2; o < 6; o++) {
       const octave = getOctave(o);
       for (let i = 0; i < octave.length; i++) {
@@ -39,8 +42,6 @@ export class MyElement extends LitElement {
     }
 
     scene.camera.position.set(0, 0, 3);
-
-    const synth = new Synth();
     this.canvas.addEventListener("click", () => {
       const selection = scene.select();
       for (const item of selection) {
