@@ -1,5 +1,5 @@
 {
-  "name": "vite-lit-element-starter",
+  "name": "vr-modular-synth",
   "version": "0.0.0",
   "main": "dist/my-element.es.js",
   "exports": {
