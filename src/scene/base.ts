@@ -1,6 +1,8 @@
 import * as THREE from "three";
+import { Vector2 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { VRButton } from "three/examples/jsm/webxr/VRButton.js";
+import { SceneObject } from "../models/base";
 
 export class Scene {
   constructor(public canvas: HTMLCanvasElement) {}
@@ -15,7 +17,9 @@ export class Scene {
   );
 
   setup() {
-    window.addEventListener("mousemove", (e) => this.onMouseMove(e), false);
+    window.addEventListener("mousemove", (e) => this.onMouse(e), false);
+    // window.addEventListener("mousedown", (e) => this.onMouse(e), false);
+    // window.addEventListener("touchend", (e) => this.onTouch(e), false);
 
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -37,18 +41,30 @@ export class Scene {
     });
   }
 
-  select(): THREE.Intersection[] {
+  select(event?: { clientX: number; clientY: number }): THREE.Intersection[] {
+    if (event) {
+      this.mouse = new Vector2(event.clientX, event.clientY);
+    }
     this.raycaster.setFromCamera(this.mouse, this.camera);
     const intersects = this.raycaster.intersectObjects(this.scene.children);
     return intersects;
   }
 
-  onMouseMove(event: { clientX: number; clientY: number }) {
-    // calculate mouse position in normalized device coordinates
-    // (-1 to +1) for both components
-
+  onMouse(event: MouseEvent) {
     this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  }
+  onTouch(event: TouchEvent) {
+    event.preventDefault();
+    const touch = event.changedTouches[0];
+    this.mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
+    this.mouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
+  }
+
+  _objects: SceneObject[] = [];
+  add(val: SceneObject) {
+    this._objects.push(val);
+    this.scene.add(val.create());
   }
 
   addObject(data: { [key: string]: any } = {}): THREE.Object3D {
